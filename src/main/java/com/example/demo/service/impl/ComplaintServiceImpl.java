@@ -4,6 +4,7 @@ import com.example.demo.service.*;
 import com.example.demo.dto.ComplaintRequest;
 import com.example.demo.entity.*;
 import java.util.List;
+
 public class ComplaintServiceImpl implements ComplaintService {
     private final ComplaintRepository repo;
     private final PriorityRuleService ruleService;
