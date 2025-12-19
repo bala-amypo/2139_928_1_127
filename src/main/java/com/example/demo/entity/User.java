@@ -1,11 +1,16 @@
 package com.example.demo.entity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 @Entity
 public class User {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private Long id;
 private String name;
+
 @Email(message = "Invalid email format")
 @NotBlank(message = "Email is required")
 @Column(unique = true)
