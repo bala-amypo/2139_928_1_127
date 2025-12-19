@@ -9,13 +9,19 @@ public class User {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private Long id;
+
+@NotBlank(message = "Name is required")
 private String name;
 
 @Email(message = "Invalid email format")
 @NotBlank(message = "Email is required")
 @Column(unique = true)
 private String email;
+
+@NotBlank(message = "Password is required")
+@Size(min = 6, message = "Password must be at least 6 characters")
 private String password;
+
 public Long getId() { return id; }
 public void setId(Long id) { this.id = id; }
 public String getName() { return name; }
