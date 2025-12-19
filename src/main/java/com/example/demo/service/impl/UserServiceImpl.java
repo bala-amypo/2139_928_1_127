@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.User;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,9 +33,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email).orElse(null);
     }
 
+    import com.example.demo.exception.UserNotFoundException;
+
     @Override
     public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
+          return userRepository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException("User not found"));
+}
+
 }
