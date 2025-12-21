@@ -18,12 +18,6 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
                          org.springframework.security.core.AuthenticationException authException)
             throws IOException, ServletException {
 
-        // allow auth endpoints without token
-        if (request.getRequestURI().startsWith("/auth")) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            return;
-        }
-
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }
