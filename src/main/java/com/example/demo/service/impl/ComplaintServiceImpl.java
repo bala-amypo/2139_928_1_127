@@ -1,4 +1,3 @@
-
 package com.example.demo.service.impl;
 
 import com.example.demo.repository.ComplaintRepository;
@@ -30,13 +29,20 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public Complaint submitComplaint(ComplaintRequest request) {
+
+        if (request.getUserId() == null) {
+            throw new RuntimeException("User ID is required");
+        }
+
         User user = userService.findById(request.getUserId());
 
         Complaint c = new Complaint();
         c.setTitle(request.getTitle());
         c.setDescription(request.getDescription());
         c.setCategory(request.getCategory());
-        c.setPriorityScore(ruleService.calculatePriority(request.getCategory()));
+        c.setPriorityScore(
+                ruleService.calculatePriority(request.getCategory())
+        );
         c.setUser(user);
         c.setStatus("OPEN");
 
@@ -55,6 +61,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public void updateComplaintStatus(Long id, String status) {
+
         Complaint complaint = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Complaint not found"));
 
