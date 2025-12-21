@@ -14,9 +14,9 @@ public class Complaint {
     private String description;
     private String category;
     private Integer priorityScore;
+    private String status;
     private LocalDateTime submittedOn;
 
-    // 🔗 MANY COMPLAINTS → ONE USER
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -41,6 +41,9 @@ public class Complaint {
 
     public Integer getPriorityScore() { return priorityScore; }
     public void setPriorityScore(Integer priorityScore) { this.priorityScore = priorityScore; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
     public LocalDateTime getSubmittedOn() { return submittedOn; }
 
