@@ -1,0 +1,29 @@
+package com.example.demo.config;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+
+@Component
+public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
+
+    @Override
+    public void commence(HttpServletRequest request,
+                         HttpServletResponse response,
+                         org.springframework.security.core.AuthenticationException authException)
+            throws IOException, ServletException {
+
+        // allow auth endpoints without token
+        if (request.getRequestURI().startsWith("/auth")) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+}
