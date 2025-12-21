@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+
 import com.example.demo.service.ComplaintService;
 import com.example.demo.dto.ComplaintRequest;
 
@@ -14,9 +16,11 @@ public class ComplaintController {
         this.service = service;
     }
 
+    // ✅ POST – show success message in Swagger
     @PostMapping("/submit")
-    public Object submit(@RequestBody ComplaintRequest r) {
-        return service.submitComplaint(r);
+    public Map<String, String> submit(@RequestBody ComplaintRequest r) {
+        service.submitComplaint(r);   // data stored in DB
+        return Map.of("message", "Complaint submitted successfully");
     }
 
     @GetMapping("/user/{id}")
@@ -30,8 +34,9 @@ public class ComplaintController {
     }
 
     @PutMapping("/status/{id}")
-    public void status(@PathVariable Long id,
-                       @RequestParam String status) {
+    public Map<String, String> status(@PathVariable Long id,
+                                      @RequestParam String status) {
         service.updateComplaintStatus(id, status);
+        return Map.of("message", "Status updated successfully");
     }
 }
