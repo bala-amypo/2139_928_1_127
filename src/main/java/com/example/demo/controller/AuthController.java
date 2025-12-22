@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dto.LoginRequest;
@@ -16,13 +17,13 @@ public class AuthController {
         this.userService = userService;
     }
 
-   
+    // ✅ REGISTER
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
+    public User register(@Valid @RequestBody User user) {
         return userService.saveUser(user);
     }
 
-    
+    // ✅ LOGIN (simple)
     @PostMapping("/login")
     public User login(@RequestBody LoginRequest request) {
 
@@ -32,11 +33,10 @@ public class AuthController {
             throw new RuntimeException("Invalid email");
         }
 
-        // simple password check
         if (!user.getPassword().equals(request.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
 
-        return user; // return user directly
+        return user;
     }
 }

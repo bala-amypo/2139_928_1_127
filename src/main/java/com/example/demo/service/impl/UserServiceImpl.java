@@ -16,9 +16,14 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    // ✅ SIMPLE SAVE (NO ENCODING)
     @Override
     public User saveUser(User user) {
+
+        // ✅ Prevent duplicate email
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
         return userRepository.save(user);
     }
 
