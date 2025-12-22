@@ -9,6 +9,7 @@ import com.example.demo.service.UserService;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final UserService userService;
@@ -17,13 +18,11 @@ public class AuthController {
         this.userService = userService;
     }
 
-    // ✅ REGISTER
     @PostMapping("/register")
     public User register(@Valid @RequestBody User user) {
         return userService.saveUser(user);
     }
 
-    // ✅ LOGIN (simple)
     @PostMapping("/login")
     public User login(@RequestBody LoginRequest request) {
 
@@ -40,3 +39,4 @@ public class AuthController {
         return user;
     }
 }
+
