@@ -26,12 +26,12 @@ public class User {
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
-    // 🔗 ONE USER → MANY COMPLAINTS
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Complaint> complaints;
 
-    // getters & setters
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
