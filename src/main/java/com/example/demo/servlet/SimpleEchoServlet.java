@@ -1,13 +1,35 @@
 package com.example.demo.servlet;
-import jakarta.servlet.*;
+
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
-@WebServlet(urlPatterns = {"/ping", "/health"})
+import java.io.PrintWriter;
+
+@WebServlet("/simple-echo")
 public class SimpleEchoServlet extends HttpServlet {
-    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        res.setContentType("text/plain");
-        if (req.getRequestURI().contains("ping")) res.getWriter().write("PONG");
-        else res.getWriter().write("0K");
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("text/plain");
+        response.setStatus(HttpServletResponse.SC_OK);
+
+        String name = request.getParameter("name");
+        String message;
+
+        if (name == null || name.trim().isEmpty()) {
+            message = "Hello, Guest";
+        } else {
+            message = "Hello, " + name.trim();
+        }
+
+        PrintWriter out = response.getWriter();
+        out.print(message);
+        out.flush();
     }
 }

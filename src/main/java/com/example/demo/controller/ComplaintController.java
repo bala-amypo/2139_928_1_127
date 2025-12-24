@@ -1,42 +1,49 @@
 package com.example.demo.controller;
 
+import java.util.List;
 import org.springframework.web.bind.annotation.*;
-import java.util.Map;
 
-import com.example.demo.service.ComplaintService;
 import com.example.demo.dto.ComplaintRequest;
+import com.example.demo.entity.Complaint;
+import com.example.demo.entity.User;
+import com.example.demo.service.ComplaintService;
+import com.example.demo.service.UserService;
 
 @RestController
 @RequestMapping("/complaints")
 public class ComplaintController {
 
-    private final ComplaintService service;
+    private final ComplaintService complaintService;
+    private final UserService userService;
 
-    public ComplaintController(ComplaintService service) {
-        this.service = service;
+    public ComplaintController(ComplaintService complaintService,
+                               UserService userService) {
+        this.complaintService = complaintService;
+        this.userService = userService;
     }
 
-    // ✅ POST – show success message in Swagger
-    @PostMapping("/submit")
-    public Map<String, String> submit(@RequestBody ComplaintRequest r) {
-        service.submitComplaint(r);   // data stored in DB
-        return Map.of("message", "Complaint submitted successfully");
+    @PostMapping("/submit/{userId}")
+    public Complaint submit(@PathVariable Long userId,
+                             @RequestBody ComplaintRequest request) {
+
+        User user = userService.findById(userId);
+        return complaintService.submitComplaint(request, user);
     }
 
-    @GetMapping("/user/{id}")
-    public Object user(@PathVariable Long id) {
-        return service.getUserComplaints(id);
+    @GetMapping("/user/{userId}")
+    public List<Complaint> userComplaints(@PathVariable Long userId) {
+        User user = userService.findById(userId);
+        return complaintService.getComplaintsForUser(user);
     }
 
     @GetMapping("/prioritized")
-    public Object prioritized() {
-        return service.getPrioritizedComplaints();
+    public List<Complaint> prioritized() {
+        return complaintService.getPrioritizedComplaints();
     }
 
     @PutMapping("/status/{id}")
-    public Map<String, String> status(@PathVariable Long id,
-                                      @RequestParam String status) {
-        service.updateComplaintStatus(id, status);
-        return Map.of("message", "Status updated successfully");
+    public Complaint updateStatus(@PathVariable Long id,
+                                  @RequestParam Complaint.Status status) {
+        return complaintService.updateStatus(id, status);
     }
 }
