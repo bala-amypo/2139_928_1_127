@@ -1,40 +1,44 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.User;
-import com.example.demo.exception.UserNotFoundException;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.example.demo.entity.User;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.security.JwtUtil;
+import com.example.demo.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepository repo;
+    private final PasswordEncoder encoder;
+    private final JwtUtil jwtUtil;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserServiceImpl(UserRepository repo, PasswordEncoder encoder, JwtUtil jwtUtil) {
+        this.repo = repo;
+        this.encoder = encoder;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
-    public User saveUser(User user) {
-
-        // ✅ Prevent duplicate email
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists");
+    public User registerCustomer(String name, String email, String password) {
+        if (repo.findByEmail(email).isPresent()) {
+            throw new BadRequestException("email already exists");
         }
 
-        return userRepository.save(user);
+        User user = new User();
+        user.setFullName(name);
+        user.setEmail(email);
+        user.setPassword(encoder.encode(password));
+        user.setRole(User.Role.CUSTOMER);
+
+        return repo.save(user);
     }
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
-    }
-
-    @Override
-    public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        return repo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
