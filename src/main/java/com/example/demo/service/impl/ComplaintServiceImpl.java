@@ -1,71 +1,63 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.repository.ComplaintRepository;
-import com.example.demo.service.ComplaintService;
-import com.example.demo.service.PriorityRuleService;
-import com.example.demo.service.UserService;
+import java.util.List;
+import org.springframework.stereotype.Service;
+
 import com.example.demo.dto.ComplaintRequest;
 import com.example.demo.entity.Complaint;
 import com.example.demo.entity.User;
-
-import org.springframework.stereotype.Service;
-import java.util.List;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.ComplaintRepository;
+import com.example.demo.service.ComplaintService;
+import com.example.demo.service.PriorityRuleService;
 
 @Service
 public class ComplaintServiceImpl implements ComplaintService {
 
-    private final ComplaintRepository repo;
-    private final PriorityRuleService ruleService;
-    private final UserService userService;
+    private final ComplaintRepository complaintRepository;
+    private final PriorityRuleService priorityRuleService;
 
-    public ComplaintServiceImpl(
-            ComplaintRepository repo,
-            PriorityRuleService ruleService,
-            UserService userService) {
-        this.repo = repo;
-        this.ruleService = ruleService;
-        this.userService = userService;
+    public ComplaintServiceImpl(ComplaintRepository complaintRepository,
+                                PriorityRuleService priorityRuleService) {
+        this.complaintRepository = complaintRepository;
+        this.priorityRuleService = priorityRuleService;
     }
 
     @Override
-    public Complaint submitComplaint(ComplaintRequest request) {
+    public Complaint submitComplaint(ComplaintRequest request, User customer) {
 
-        if (request.getUserId() == null) {
-            throw new RuntimeException("User ID is required");
-        }
+        Complaint complaint = new Complaint();
+        complaint.setTitle(request.getTitle());
+        complaint.setDescription(request.getDescription());
+        complaint.setCategory(request.getCategory());
+        complaint.setChannel(request.getChannel());
+        complaint.setSeverity(request.getSeverity());
+        complaint.setUrgency(request.getUrgency());
+        complaint.setCustomer(customer);
 
-        User user = userService.findById(request.getUserId());
+        int score = priorityRuleService.computePriorityScore(complaint);
+        complaint.setPriorityScore(score);
 
-        Complaint c = new Complaint();
-        c.setTitle(request.getTitle());
-        c.setDescription(request.getDescription());
-        c.setCategory(request.getCategory());
-        c.setPriorityScore(
-                ruleService.calculatePriority(request.getCategory())
-        );
-        c.setUser(user);
-        c.setStatus("OPEN");
-
-        return repo.save(c);
+        return complaintRepository.save(complaint);
     }
 
     @Override
-    public List<Complaint> getUserComplaints(Long userId) {
-        return repo.findByUser_Id(userId);
+    public List<Complaint> getComplaintsForUser(User customer) {
+        return complaintRepository.findByCustomer(customer);
     }
 
     @Override
     public List<Complaint> getPrioritizedComplaints() {
-        return repo.findAllByOrderByPriorityScoreDescSubmittedOnAsc();
+        return complaintRepository.findAllOrderByPriorityScoreDescCreatedAtAsc();
     }
 
     @Override
-    public void updateComplaintStatus(Long id, String status) {
+    public Complaint updateStatus(Long complaintId, Complaint.Status status) {
 
-        Complaint complaint = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Complaint not found"));
+        Complaint complaint = complaintRepository.findById(complaintId)
+                .orElseThrow(() -> new ResourceNotFoundException("Complaint not found"));
 
         complaint.setStatus(status);
-        repo.save(complaint);
+        return complaintRepository.save(complaint);
     }
 }
