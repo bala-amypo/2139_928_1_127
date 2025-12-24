@@ -25,21 +25,22 @@ public class UserServiceImpl implements UserService {
         this.jwtUtil = jwtUtil;
     }
 
-    @Override
-    public User registerCustomer(String name, String email, String rawPassword) {
+   @Override
+public User registerCustomer(String name, String email, String rawPassword) {
 
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new BadRequestException("email already exists");
-        }
-
-        User user = new User();
-        user.setFullName(name);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setRole(User.Role.CUSTOMER);
-
-        return userRepository.save(user);
+    if (userRepository.findByEmail(email).isPresent()) {
+        throw new BadRequestException("email already exists");
     }
+
+    User user = new User();
+    user.setFullName(name);
+    user.setEmail(email);
+    user.setPassword(passwordEncoder.encode(rawPassword));
+    user.setRole(User.Role.CUSTOMER);
+
+    return userRepository.save(user);
+}
+
 
     @Override
     public User findByEmail(String email) {
