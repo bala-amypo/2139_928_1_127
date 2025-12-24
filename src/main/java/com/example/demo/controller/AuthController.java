@@ -1,42 +1,35 @@
 package com.example.demo.controller;
 
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-
-import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.AuthRequest;
 import com.example.demo.entity.User;
+import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserService;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
-    public User register(@Valid @RequestBody User user) {
-        return userService.saveUser(user);
+    public User register(@RequestBody User user) {
+        return userService.registerCustomer(
+                user.getFullName(),
+                user.getEmail(),
+                user.getPassword()
+        );
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody LoginRequest request) {
-
+    public String login(@RequestBody AuthRequest request) {
         User user = userService.findByEmail(request.getEmail());
-
-        if (user == null) {
-            throw new RuntimeException("Invalid email");
-        }
-
-        if (!user.getPassword().equals(request.getPassword())) {
-            throw new RuntimeException("Invalid password");
-        }
-
-        return user;
+        return jwtUtil.generateToken(user.getEmail());
     }
 }
-
