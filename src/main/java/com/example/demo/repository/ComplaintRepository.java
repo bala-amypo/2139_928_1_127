@@ -8,8 +8,9 @@ import com.example.demo.entity.User;
 
 public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
-    // ✅ MATCHES ENTITY FIELD
-    List<Complaint> findByUser(User user);
+    // ✅ matches entity field "customer"
+    List<Complaint> findByCustomer(User customer);
 
-    List<Complaint> findAllOrderByPriorityScoreDescCreatedAtAsc();
+    // ✅ CORRECT METHOD NAME
+    List<Complaint> findAllByOrderByPriorityScoreDescCreatedAtAsc();
 }
