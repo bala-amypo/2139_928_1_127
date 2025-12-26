@@ -23,20 +23,22 @@ public class JwtUtil {
                 .compact();
     }
 
-    // ✅ REQUIRED BY CONTROLLERS & FILTER
+    // ✅ REQUIRED BY JwtAuthenticationFilter & Controller
     public String extractEmail(String token) {
         return extractClaims(token).getSubject();
     }
 
+    // ✅ REQUIRED BY JwtAuthenticationFilter
     public boolean validateToken(String token, String email) {
         return extractEmail(token).equals(email);
     }
 
-    // ✅ REQUIRED BY TESTS
+    // ✅ REQUIRED BY TEST CASES
     public String extractRole(String token) {
         return extractClaims(token).get("role", String.class);
     }
 
+    // ✅ REQUIRED BY TEST CASES
     public Long extractUserId(String token) {
         return extractClaims(token).get("userId", Long.class);
     }
