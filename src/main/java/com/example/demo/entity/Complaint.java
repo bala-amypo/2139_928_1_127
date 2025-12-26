@@ -2,8 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Complaint {
@@ -23,7 +22,7 @@ public class Complaint {
     private Integer priorityScore;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.NEW;
 
     @Enumerated(EnumType.STRING)
     private Severity severity;
@@ -31,30 +30,45 @@ public class Complaint {
     @Enumerated(EnumType.STRING)
     private Urgency urgency;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private User customer;
 
-    // ✅ REQUIRED BY TEST CASES
+    @ManyToOne
+    private User assignedAgent;
+
     @ManyToMany
     @JoinTable(
-        name = "complaint_priority_rule",
+        name = "complaint_priority_rules",
         joinColumns = @JoinColumn(name = "complaint_id"),
-        inverseJoinColumns = @JoinColumn(name = "priority_rule_id")
+        inverseJoinColumns = @JoinColumn(name = "rule_id")
     )
-    private List<PriorityRule> priorityRules = new ArrayList<>();
+    private Set<PriorityRule> priorityRules = new HashSet<>();
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-        this.status = Status.NEW;
-    }
-
-    // ===== Getters & Setters =====
+    // ===== getters & setters =====
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public User getCustomer() { return customer; }
+    public void setCustomer(User customer) { this.customer = customer; }
+
+    public User getAssignedAgent() { return assignedAgent; }
+    public void setAssignedAgent(User assignedAgent) { this.assignedAgent = assignedAgent; }
+
+    public Set<PriorityRule> getPriorityRules() { return priorityRules; }
+
+    public Integer getPriorityScore() { return priorityScore; }
+    public void setPriorityScore(Integer priorityScore) { this.priorityScore = priorityScore; }
+
+    public Severity getSeverity() { return severity; }
+    public void setSeverity(Severity severity) { this.severity = severity; }
+
+    public Urgency getUrgency() { return urgency; }
+    public void setUrgency(Urgency urgency) { this.urgency = urgency; }
+
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
@@ -67,26 +81,4 @@ public class Complaint {
 
     public String getChannel() { return channel; }
     public void setChannel(String channel) { this.channel = channel; }
-
-    public Integer getPriorityScore() { return priorityScore; }
-    public void setPriorityScore(Integer priorityScore) { this.priorityScore = priorityScore; }
-
-    public Status getStatus() { return status; }
-    public void setStatus(Status status) { this.status = status; }
-
-    public Severity getSeverity() { return severity; }
-    public void setSeverity(Severity severity) { this.severity = severity; }
-
-    public Urgency getUrgency() { return urgency; }
-    public void setUrgency(Urgency urgency) { this.urgency = urgency; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-
-    // ✅ TEST CASE METHODS
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-
-    public List<PriorityRule> getPriorityRules() {
-        return priorityRules;
-    }
 }

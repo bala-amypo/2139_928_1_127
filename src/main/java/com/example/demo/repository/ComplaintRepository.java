@@ -1,13 +1,12 @@
 package com.example.demo.repository;
 
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.demo.entity.Complaint;
-import com.example.demo.entity.User;
+import java.util.*;
+import com.example.demo.entity.*;
 
 public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
-    List<Complaint> findByUser(User user);
+    List<Complaint> findByCustomer(User customer);
 
-    List<Complaint> findAllByOrderByPriorityScoreDescCreatedAtAsc();
+    List<Complaint> findAllOrderByPriorityScoreDescCreatedAtAsc();
 }
