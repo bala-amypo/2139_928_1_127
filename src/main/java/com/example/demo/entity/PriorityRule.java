@@ -16,6 +16,7 @@ public class PriorityRule {
     private Integer weight;
     private boolean active = true;
 
+    // ✅ REQUIRED BY TEST CASE
     @ManyToMany(mappedBy = "priorityRules")
     private List<Complaint> complaints = new ArrayList<>();
 
