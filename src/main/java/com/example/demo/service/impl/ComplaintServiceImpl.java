@@ -18,7 +18,6 @@ public class ComplaintServiceImpl implements ComplaintService {
     private final ComplaintRepository repo;
     private final PriorityRuleService ruleService;
 
-    // ✅ EXACT constructor expected by tests
     public ComplaintServiceImpl(ComplaintRepository repo,
                                 PriorityRuleService ruleService) {
         this.repo = repo;
@@ -35,8 +34,9 @@ public class ComplaintServiceImpl implements ComplaintService {
         c.setChannel(request.getChannel());
         c.setSeverity(request.getSeverity());
         c.setUrgency(request.getUrgency());
-        c.setUser(user);
-        c.setStatus(Complaint.Status.NEW);
+
+        // ✅ ENTITY FIELD IS "customer"
+        c.setCustomer(user);
 
         int priority = ruleService.calculatePriority(
                 request.getSeverity(), request.getUrgency());
@@ -47,12 +47,14 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public List<Complaint> getComplaintsForUser(User user) {
-        return repo.findByUser(user);
+        // ✅ UPDATED METHOD
+        return repo.findByCustomer(user);
     }
 
     @Override
     public List<Complaint> getPrioritizedComplaints() {
-        return repo.findAllOrderByPriorityScoreDescCreatedAtAsc();
+        // ✅ UPDATED METHOD
+        return repo.findAllByOrderByPriorityScoreDescCreatedAtAsc();
     }
 
     @Override
