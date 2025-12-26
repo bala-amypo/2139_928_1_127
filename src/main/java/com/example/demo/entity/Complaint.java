@@ -2,7 +2,8 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Complaint {
@@ -30,7 +31,7 @@ public class Complaint {
     @Enumerated(EnumType.STRING)
     private Urgency urgency;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     @ManyToOne
     private User customer;
@@ -39,24 +40,16 @@ public class Complaint {
     private User assignedAgent;
 
     @ManyToMany
-    @JoinTable(
-        name = "complaint_priority_rules",
-        joinColumns = @JoinColumn(name = "complaint_id"),
-        inverseJoinColumns = @JoinColumn(name = "rule_id")
-    )
     private Set<PriorityRule> priorityRules = new HashSet<>();
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
+    }
 
     // ===== getters & setters =====
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
-    public User getCustomer() { return customer; }
-    public void setCustomer(User customer) { this.customer = customer; }
-
-    public User getAssignedAgent() { return assignedAgent; }
-    public void setAssignedAgent(User assignedAgent) { this.assignedAgent = assignedAgent; }
-
-    public Set<PriorityRule> getPriorityRules() { return priorityRules; }
 
     public Integer getPriorityScore() { return priorityScore; }
     public void setPriorityScore(Integer priorityScore) { this.priorityScore = priorityScore; }
@@ -70,15 +63,11 @@ public class Complaint {
     public Status getStatus() { return status; }
     public void setStatus(Status status) { this.status = status; }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public User getCustomer() { return customer; }
+    public void setCustomer(User customer) { this.customer = customer; }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public User getAssignedAgent() { return assignedAgent; }
+    public void setAssignedAgent(User assignedAgent) { this.assignedAgent = assignedAgent; }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
-
-    public String getChannel() { return channel; }
-    public void setChannel(String channel) { this.channel = channel; }
+    public Set<PriorityRule> getPriorityRules() { return priorityRules; }
 }
