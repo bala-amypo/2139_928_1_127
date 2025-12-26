@@ -1,16 +1,28 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.Complaint;
+import com.example.demo.entity.PriorityRule;
+import com.example.demo.repository.PriorityRuleRepository;
 import com.example.demo.service.PriorityRuleService;
 
 @Service
 public class PriorityRuleServiceImpl implements PriorityRuleService {
 
+    private final PriorityRuleRepository repo;
+
+    // ✅ Constructor injection (VERY IMPORTANT)
+    public PriorityRuleServiceImpl(PriorityRuleRepository repo) {
+        this.repo = repo;
+    }
+
     @Override
-    public int calculatePriority(Complaint.Severity severity,
-                                 Complaint.Urgency urgency) {
+    public int calculatePriority(
+            Complaint.Severity severity,
+            Complaint.Urgency urgency) {
 
         int score = 0;
 
@@ -29,5 +41,11 @@ public class PriorityRuleServiceImpl implements PriorityRuleService {
         }
 
         return score;
+    }
+
+    // ✅ IMPLEMENTED (this was missing earlier)
+    @Override
+    public List<PriorityRule> getActiveRules() {
+        return repo.findByActiveTrue();
     }
 }
