@@ -2,21 +2,15 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Complaint {
 
-    public enum Status {
-        NEW, OPEN, IN_PROGRESS, RESOLVED
-    }
-
-    public enum Severity {
-        LOW, MEDIUM, HIGH, CRITICAL
-    }
-
-    public enum Urgency {
-        LOW, MEDIUM, HIGH, IMMEDIATE
-    }
+    public enum Status { NEW, OPEN, IN_PROGRESS, RESOLVED }
+    public enum Severity { LOW, MEDIUM, HIGH, CRITICAL }
+    public enum Urgency { LOW, MEDIUM, HIGH, IMMEDIATE }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,10 +33,15 @@ public class Complaint {
 
     private LocalDateTime createdAt;
 
-    // ✅ FIXED NAME
+    // 🔴 TEST EXPECTS THESE NAMES
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private User customer;
+
+    @ManyToOne
+    private User assignedAgent;
+
+    @ManyToMany
+    private List<PriorityRule> priorityRules = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
@@ -50,90 +49,26 @@ public class Complaint {
         this.status = Status.NEW;
     }
 
-    // ===== GETTERS & SETTERS =====
+    // ===== REQUIRED GETTERS & SETTERS =====
 
-    public Long getId() {
-        return id;
-    }
+    public User getCustomer() { return customer; }
+    public void setCustomer(User customer) { this.customer = customer; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public User getAssignedAgent() { return assignedAgent; }
+    public void setAssignedAgent(User assignedAgent) { this.assignedAgent = assignedAgent; }
 
-    public String getTitle() {
-        return title;
-    }
+    public List<PriorityRule> getPriorityRules() { return priorityRules; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public Severity getSeverity() { return severity; }
+    public Urgency getUrgency() { return urgency; }
 
-    public String getDescription() {
-        return description;
-    }
+    public void setSeverity(Severity severity) { this.severity = severity; }
+    public void setUrgency(Urgency urgency) { this.urgency = urgency; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
-    public Integer getPriorityScore() {
-        return priorityScore;
-    }
-
-    public void setPriorityScore(Integer priorityScore) {
-        this.priorityScore = priorityScore;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public Severity getSeverity() {
-        return severity;
-    }
-
-    public void setSeverity(Severity severity) {
-        this.severity = severity;
-    }
-
-    public Urgency getUrgency() {
-        return urgency;
-    }
-
-    public void setUrgency(Urgency urgency) {
-        this.urgency = urgency;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    // ✅ REQUIRED METHODS
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public void setTitle(String title) { this.title = title; }
+    public void setDescription(String description) { this.description = description; }
+    public void setCategory(String category) { this.category = category; }
+    public void setChannel(String channel) { this.channel = channel; }
+    public void setPriorityScore(Integer priorityScore) { this.priorityScore = priorityScore; }
+    public void setStatus(Status status) { this.status = status; }
 }
