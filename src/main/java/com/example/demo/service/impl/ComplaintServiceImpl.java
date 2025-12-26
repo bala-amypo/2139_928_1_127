@@ -18,7 +18,6 @@ public class ComplaintServiceImpl implements ComplaintService {
     private final ComplaintRepository repo;
     private final PriorityRuleService ruleService;
 
-    // ✅ ONLY constructor tests expect
     public ComplaintServiceImpl(
             ComplaintRepository repo,
             PriorityRuleService ruleService) {
@@ -36,7 +35,9 @@ public class ComplaintServiceImpl implements ComplaintService {
         c.setChannel(request.getChannel());
         c.setSeverity(request.getSeverity());
         c.setUrgency(request.getUrgency());
-        c.setUser(user);
+
+        // ✅ MUST BE customer
+        c.setCustomer(user);
 
         int priority = ruleService.calculatePriority(
                 request.getSeverity(),
@@ -49,15 +50,14 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public List<Complaint> getComplaintsForUser(User user) {
-        return repo.findByUser(user);
+        return repo.findByCustomer(user);
     }
 
     @Override
     public List<Complaint> getPrioritizedComplaints() {
-        return repo.findAllByOrderByPriorityScoreDescCreatedAtAsc();
+        return repo.findAllOrderByPriorityScoreDescCreatedAtAsc();
     }
 
-    // ✅ REQUIRED BY INTERFACE & TESTS
     @Override
     public Complaint updateStatus(Long id, Complaint.Status status) {
 
