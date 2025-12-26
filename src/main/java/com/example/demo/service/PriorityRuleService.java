@@ -1,18 +1,13 @@
 package com.example.demo.service;
 
-import java.util.List;
-import com.example.demo.entity.Complaint;
-import com.example.demo.entity.PriorityRule;
+import java.util.*;
+import com.example.demo.entity.*;
 
 public interface PriorityRuleService {
 
-    int calculatePriority(
-            Complaint.Severity severity,
-            Complaint.Urgency urgency
-    );
+    int calculatePriority(Complaint.Severity severity, Complaint.Urgency urgency);
 
     int computePriorityScore(Complaint complaint);
 
-    // ✅ REQUIRED BY PriorityRuleController
     List<PriorityRule> getActiveRules();
 }

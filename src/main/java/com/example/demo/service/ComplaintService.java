@@ -1,9 +1,8 @@
 package com.example.demo.service;
 
-import java.util.List;
+import java.util.*;
 import com.example.demo.dto.ComplaintRequest;
-import com.example.demo.entity.Complaint;
-import com.example.demo.entity.User;
+import com.example.demo.entity.*;
 
 public interface ComplaintService {
 
