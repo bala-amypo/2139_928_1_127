@@ -1,14 +1,10 @@
-package com.example.demo.service;
+package com.example.demo.repository;
 
-import com.example.demo.entity.Complaint;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.entity.PriorityRule;
 
-public interface PriorityRuleService {
+public interface PriorityRuleRepository extends JpaRepository<PriorityRule, Long> {
 
-    int calculatePriority(
-            Complaint.Severity severity,
-            Complaint.Urgency urgency
-    );
-
-    // ✅ REQUIRED BY TEST
-    int computePriorityScore(Complaint complaint);
+    List<PriorityRule> findByActiveTrue();
 }
