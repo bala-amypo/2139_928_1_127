@@ -33,7 +33,6 @@ public class Complaint {
 
     private LocalDateTime createdAt;
 
-    // 🔴 TEST EXPECTS THESE NAMES
     @ManyToOne
     private User customer;
 
@@ -49,7 +48,7 @@ public class Complaint {
         this.status = Status.NEW;
     }
 
-    // ===== REQUIRED GETTERS & SETTERS =====
+    // ===== GETTERS & SETTERS =====
 
     public User getCustomer() { return customer; }
     public void setCustomer(User customer) { this.customer = customer; }
