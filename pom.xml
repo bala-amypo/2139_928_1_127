@@ -16,8 +16,9 @@
     <groupId>com.example</groupId>
     <artifactId>demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
-    <description>Digital Complaint Prioritization Engine</description>
+
+    <name>Digital Complaint Prioritization Engine</name>
+    <description>Spring Boot JPA JWT TestNG Project</description>
 
     <properties>
         <java.version>17</java.version>
@@ -82,14 +83,20 @@
             <version>2.3.0</version>
         </dependency>
 
-        <!-- Spring Boot Test -->
+        <!-- Spring Boot Test (JUnit excluded) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- ✅ TestNG -->
+        <!-- TestNG -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -102,16 +109,20 @@
     <build>
         <plugins>
 
-            <!-- ✅ REQUIRED FOR TESTNG -->
+            <!-- Surefire plugin for TestNG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <useModulePath>false</useModulePath>
+                    <testNGArtifactName>org.testng:testng</testNGArtifactName>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
                 </configuration>
             </plugin>
 
+            <!-- Spring Boot plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
