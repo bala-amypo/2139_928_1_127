@@ -14,6 +14,6 @@ public interface ComplaintService {
 
     List<Complaint> getPrioritizedComplaints();
 
-    // ✅ MUST exist
+    // ✅ MUST exist (tests expect this)
     Complaint updateStatus(Long id, Complaint.Status status);
 }
