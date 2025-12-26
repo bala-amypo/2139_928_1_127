@@ -1,7 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class PriorityRule {
@@ -18,7 +19,6 @@ public class PriorityRule {
     @ManyToMany(mappedBy = "priorityRules")
     private Set<Complaint> complaints = new HashSet<>();
 
-    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
