@@ -83,7 +83,7 @@
             <version>2.3.0</version>
         </dependency>
 
-        <!-- Spring Boot Test (JUnit excluded) -->
+        <!-- Spring Boot Test (JUnit removed) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -94,6 +94,21 @@
                     <artifactId>junit-jupiter</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- Mockito -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Spring Test -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- TestNG -->
@@ -109,20 +124,21 @@
     <build>
         <plugins>
 
-            <!-- Surefire plugin for TestNG -->
+            <!-- ✅ FORCE TESTNG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <testNGArtifactName>org.testng:testng</testNGArtifactName>
-                    <includes>
-                        <include>**/*Test.java</include>
-                    </includes>
+                    <useModulePath>false</useModulePath>
+                    <providers>
+                        <provider>
+                            <name>testng</name>
+                        </provider>
+                    </providers>
                 </configuration>
             </plugin>
 
-            <!-- Spring Boot plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
