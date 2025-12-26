@@ -1,7 +1,6 @@
 package com.example.demo.service.impl;
 
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.ComplaintRequest;
@@ -35,11 +34,13 @@ public class ComplaintServiceImpl implements ComplaintService {
         c.setSeverity(request.getSeverity());
         c.setUrgency(request.getUrgency());
 
-        // ✅ ENTITY FIELD IS "customer"
-        c.setCustomer(user);
+        // ✅ CORRECT — matches entity
+        c.setUser(user);
 
         int priority = ruleService.calculatePriority(
-                request.getSeverity(), request.getUrgency());
+                request.getSeverity(),
+                request.getUrgency()
+        );
         c.setPriorityScore(priority);
 
         return repo.save(c);
@@ -47,13 +48,13 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public List<Complaint> getComplaintsForUser(User user) {
-        // ✅ UPDATED METHOD
-        return repo.findByCustomer(user);
+        // ✅ CORRECT
+        return repo.findByUser(user);
     }
 
     @Override
     public List<Complaint> getPrioritizedComplaints() {
-        // ✅ UPDATED METHOD
+        // ✅ CORRECT
         return repo.findAllByOrderByPriorityScoreDescCreatedAtAsc();
     }
 
