@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
+
 import java.util.Date;
 
 @Component
@@ -22,6 +23,16 @@ public class JwtUtil {
                 .compact();
     }
 
+    // ✅ REQUIRED BY CONTROLLERS & FILTER
+    public String extractEmail(String token) {
+        return extractClaims(token).getSubject();
+    }
+
+    public boolean validateToken(String token, String email) {
+        return extractEmail(token).equals(email);
+    }
+
+    // ✅ REQUIRED BY TESTS
     public String extractRole(String token) {
         return extractClaims(token).get("role", String.class);
     }
