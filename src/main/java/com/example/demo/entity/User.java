@@ -24,7 +24,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    // ===== Getters & Setters =====
+    
 
     public Long getId() {
         return id;
