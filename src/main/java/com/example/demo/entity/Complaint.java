@@ -21,7 +21,6 @@ public class Complaint {
         LOW, MEDIUM, HIGH, IMMEDIATE
     }
 
-    // ===== FIELDS =====
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
