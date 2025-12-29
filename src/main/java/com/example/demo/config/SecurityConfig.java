@@ -26,12 +26,8 @@ public class SecurityConfig {
 
         http
             .csrf(csrf -> csrf.disable())
-
-            // ❌ Disable default login page
             .formLogin(form -> form.disable())
             .httpBasic(basic -> basic.disable())
-
-            // ✅ Stateless session (JWT)
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
