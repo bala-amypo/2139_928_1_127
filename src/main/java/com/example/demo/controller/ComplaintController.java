@@ -29,20 +29,20 @@ public class ComplaintController {
         this.jwtUtil = jwtUtil;
     }
 
-    // ✅ SUBMIT COMPLAINT (TEST EXPECTED)
+ 
     @PostMapping("/submit")
     public Complaint submitComplaint(@RequestBody ComplaintRequest request,
                                      HttpServletRequest httpRequest) {
 
         String authHeader = httpRequest.getHeader("Authorization");
-        String token = authHeader.substring(7); // remove "Bearer "
+        String token = authHeader.substring(7);
         String email = jwtUtil.extractEmail(token);
 
         User user = userService.findByEmail(email);
         return complaintService.submitComplaint(request, user);
     }
 
-    // ✅ GET USER COMPLAINTS (JWT BASED)
+    
     @GetMapping("/user")
     public List<Complaint> getUserComplaints(HttpServletRequest httpRequest) {
 
@@ -54,13 +54,13 @@ public class ComplaintController {
         return complaintService.getComplaintsForUser(user);
     }
 
-    // ✅ PRIORITIZED COMPLAINTS
+   
     @GetMapping("/prioritized")
     public List<Complaint> prioritized() {
         return complaintService.getPrioritizedComplaints();
     }
 
-    // ✅ UPDATE STATUS (OPTIONAL TEST)
+   
     @PutMapping("/status/{id}")
     public Complaint updateStatus(@PathVariable Long id,
                                   @RequestParam Complaint.Status status) {

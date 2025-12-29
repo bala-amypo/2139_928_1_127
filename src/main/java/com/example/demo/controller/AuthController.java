@@ -26,7 +26,7 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // ✅ REGISTER (tests expect User return)
+    
     @PostMapping("/register")
     public User register(@RequestBody User user) {
 
@@ -37,7 +37,7 @@ public class AuthController {
         );
     }
 
-    // ✅ LOGIN (tests expect AuthResponse)
+
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
 
