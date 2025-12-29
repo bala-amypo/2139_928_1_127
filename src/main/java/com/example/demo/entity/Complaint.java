@@ -8,7 +8,7 @@ import java.util.Set;
 @Entity
 public class Complaint {
 
-    // ===== ENUMS =====
+    
     public enum Status {
         NEW, OPEN, IN_PROGRESS, RESOLVED
     }
