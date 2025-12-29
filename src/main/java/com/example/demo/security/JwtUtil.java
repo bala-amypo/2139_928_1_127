@@ -12,7 +12,6 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // Must be long enough (HS256 requirement)
     private static final String SECRET =
             "mysecretkeymysecretkeymysecretkey123456";
 
